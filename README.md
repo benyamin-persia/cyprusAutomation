@@ -415,7 +415,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact
 
 - **LinkedIn**: https://www.linkedin.com/in/benyamin-ma/
-- **GitHub**: [@yourusername](https://github.com/yourusername)
+- **GitHub**: https://github.com/benyamin-persia
 - **Email**: benyamin.mohamadalizadeh7@gmail.com
 
 ---
