@@ -1,0 +1,234 @@
+name: Cypress Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # UI Tests
+  ui-tests:
+    runs-on: ubuntu-latest
+    name: UI Tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run UI tests
+        run: npm run test:smoke
+        env:
+          CYPRESS_BASE_URL: https://opensource-demo.orangehrmlive.com
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-ui
+          path: cypress/screenshots
+          retention-days: 30
+
+      - name: Upload videos
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-videos-ui
+          path: cypress/videos
+          retention-days: 30
+
+  # API Tests
+  api-tests:
+    runs-on: ubuntu-latest
+    name: API Tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run API tests
+        run: npm run test:api
+        env:
+          CYPRESS_BASE_URL: https://opensource-demo.orangehrmlive.com
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-api
+          path: cypress/screenshots
+          retention-days: 30
+
+  # Performance Tests
+  performance-tests:
+    runs-on: ubuntu-latest
+    name: Performance Tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run performance tests
+        run: npm run test:api:performance
+        env:
+          CYPRESS_BASE_URL: https://opensource-demo.orangehrmlive.com
+
+      - name: Upload performance reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-reports
+          path: cypress/reports
+          retention-days: 30
+
+  # Cross-browser Tests
+  cross-browser-tests:
+    runs-on: ubuntu-latest
+    name: Cross-browser Tests
+    strategy:
+      matrix:
+        browser: [chrome, firefox, edge]
+        fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests on ${{ matrix.browser }}
+        run: npm run test:${{ matrix.browser }}
+        env:
+          CYPRESS_BASE_URL: https://opensource-demo.orangehrmlive.com
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-${{ matrix.browser }}
+          path: cypress/screenshots
+          retention-days: 30
+
+  # Code Quality
+  code-quality:
+    runs-on: ubuntu-latest
+    name: Code Quality
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Check code formatting
+        run: npm run format:check
+
+      - name: Validate project
+        run: npm run validate
+
+  # Security Tests
+  security-tests:
+    runs-on: ubuntu-latest
+    name: Security Tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security tests
+        run: npm run test:security
+        env:
+          CYPRESS_BASE_URL: https://opensource-demo.orangehrmlive.com
+
+  # Generate Reports
+  generate-reports:
+    runs-on: ubuntu-latest
+    name: Generate Reports
+    needs: [ui-tests, api-tests, performance-tests]
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate test reports
+        run: npm run generate-report
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: cypress/reports
+          retention-days: 30
+
+  # Notify Results
+  notify-results:
+    runs-on: ubuntu-latest
+    name: Notify Results
+    needs: [ui-tests, api-tests, performance-tests, code-quality, security-tests]
+    if: always()
+    steps:
+      - name: Notify test results
+        run: |
+          echo "Test Results Summary:"
+          echo "UI Tests: ${{ needs.ui-tests.result }}"
+          echo "API Tests: ${{ needs.api-tests.result }}"
+          echo "Performance Tests: ${{ needs.performance-tests.result }}"
+          echo "Code Quality: ${{ needs.code-quality.result }}"
+          echo "Security Tests: ${{ needs.security-tests.result }}" 

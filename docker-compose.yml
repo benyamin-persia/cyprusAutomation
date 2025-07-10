@@ -1,0 +1,135 @@
+version: '3.8'
+
+services:
+  # Cypress test runner
+  cypress:
+    build: .
+    environment:
+      - CYPRESS_BASE_URL=https://opensource-demo.orangehrmlive.com
+      - CYPRESS_VIDEO=true
+      - CYPRESS_SCREENSHOT_ON_RUN_FAILURE=true
+    volumes:
+      - ./cypress:/app/cypress
+      - ./cypress/screenshots:/app/cypress/screenshots
+      - ./cypress/videos:/app/cypress/videos
+      - ./cypress/downloads:/app/cypress/downloads
+      - ./cypress/reports:/app/cypress/reports
+    command: npm run test:smoke
+
+  # Cypress with headed mode for debugging
+  cypress-headed:
+    build: .
+    environment:
+      - CYPRESS_BASE_URL=https://opensource-demo.orangehrmlive.com
+      - CYPRESS_HEADED=true
+    volumes:
+      - ./cypress:/app/cypress
+      - ./cypress/screenshots:/app/cypress/screenshots
+      - ./cypress/videos:/app/cypress/videos
+    command: npm run test:headed
+
+  # Cypress for regression testing
+  cypress-regression:
+    build: .
+    environment:
+      - CYPRESS_BASE_URL=https://opensource-demo.orangehrmlive.com
+      - CYPRESS_VIDEO=true
+    volumes:
+      - ./cypress:/app/cypress
+      - ./cypress/screenshots:/app/cypress/screenshots
+      - ./cypress/videos:/app/cypress/videos
+    command: npm run test:regression
+
+  # Cypress for performance testing
+  cypress-performance:
+    build: .
+    environment:
+      - CYPRESS_BASE_URL=https://opensource-demo.orangehrmlive.com
+      - CYPRESS_VIDEO=true
+    volumes:
+      - ./cypress:/app/cypress
+      - ./cypress/screenshots:/app/cypress/screenshots
+      - ./cypress/videos:/app/cypress/videos
+    command: npm run test:performance
+
+  # Cypress for security testing
+  cypress-security:
+    build: .
+    environment:
+      - CYPRESS_BASE_URL=https://opensource-demo.orangehrmlive.com
+      - CYPRESS_VIDEO=true
+    volumes:
+      - ./cypress:/app/cypress
+      - ./cypress/screenshots:/app/cypress/screenshots
+      - ./cypress/videos:/app/cypress/videos
+    command: npm run test:security
+
+  # Cypress with different browsers
+  cypress-chrome:
+    build: .
+    environment:
+      - CYPRESS_BASE_URL=https://opensource-demo.orangehrmlive.com
+      - CYPRESS_BROWSER=chrome
+    volumes:
+      - ./cypress:/app/cypress
+      - ./cypress/screenshots:/app/cypress/screenshots
+      - ./cypress/videos:/app/cypress/videos
+    command: npm run test:chrome
+
+  cypress-firefox:
+    build: .
+    environment:
+      - CYPRESS_BASE_URL=https://opensource-demo.orangehrmlive.com
+      - CYPRESS_BROWSER=firefox
+    volumes:
+      - ./cypress:/app/cypress
+      - ./cypress/screenshots:/app/cypress/screenshots
+      - ./cypress/videos:/app/cypress/videos
+    command: npm run test:firefox
+
+  cypress-edge:
+    build: .
+    environment:
+      - CYPRESS_BASE_URL=https://opensource-demo.orangehrmlive.com
+      - CYPRESS_BROWSER=edge
+    volumes:
+      - ./cypress:/app/cypress
+      - ./cypress/screenshots:/app/cypress/screenshots
+      - ./cypress/videos:/app/cypress/videos
+    command: npm run test:edge
+
+  # Development environment
+  cypress-dev:
+    build: .
+    environment:
+      - CYPRESS_BASE_URL=https://dev.orangehrmlive.com
+      - CYPRESS_VIDEO=true
+    volumes:
+      - ./cypress:/app/cypress
+      - ./cypress/screenshots:/app/cypress/screenshots
+      - ./cypress/videos:/app/cypress/videos
+    command: npm run test:smoke
+
+  # Staging environment
+  cypress-staging:
+    build: .
+    environment:
+      - CYPRESS_BASE_URL=https://staging.orangehrmlive.com
+      - CYPRESS_VIDEO=true
+    volumes:
+      - ./cypress:/app/cypress
+      - ./cypress/screenshots:/app/cypress/screenshots
+      - ./cypress/videos:/app/cypress/videos
+    command: npm run test:regression
+
+  # Production environment
+  cypress-production:
+    build: .
+    environment:
+      - CYPRESS_BASE_URL=https://production.orangehrmlive.com
+      - CYPRESS_VIDEO=true
+    volumes:
+      - ./cypress:/app/cypress
+      - ./cypress/screenshots:/app/cypress/screenshots
+      - ./cypress/videos:/app/cypress/videos
+    command: npm run test:smoke 

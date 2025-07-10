@@ -1,0 +1,75 @@
+{
+  "validUser": {
+    "username": "Admin",
+    "password": "admin123",
+    "expectedResult": "success"
+  },
+  "invalidUsers": [
+    {
+      "username": "Admin",
+      "password": "wrongpassword",
+      "expectedResult": "failure",
+      "errorMessage": "Invalid credentials"
+    },
+    {
+      "username": "wronguser",
+      "password": "admin123",
+      "expectedResult": "failure",
+      "errorMessage": "Invalid credentials"
+    },
+    {
+      "username": "wronguser",
+      "password": "wrongpassword",
+      "expectedResult": "failure",
+      "errorMessage": "Invalid credentials"
+    }
+  ],
+  "emptyFields": [
+    {
+      "username": "",
+      "password": "admin123",
+      "expectedResult": "failure",
+      "errorMessage": "Required"
+    },
+    {
+      "username": "Admin",
+      "password": "",
+      "expectedResult": "failure",
+      "errorMessage": "Required"
+    },
+    {
+      "username": "",
+      "password": "",
+      "expectedResult": "failure",
+      "errorMessage": "Required"
+    }
+  ],
+  "specialCharacters": [
+    {
+      "username": "Admin'",
+      "password": "admin123",
+      "expectedResult": "failure",
+      "errorMessage": "Invalid credentials"
+    },
+    {
+      "username": "Admin",
+      "password": "admin123<script>",
+      "expectedResult": "failure",
+      "errorMessage": "Invalid credentials"
+    }
+  ],
+  "whitespaceCases": [
+    {
+      "username": " Admin ",
+      "password": "admin123",
+      "expectedResult": "failure",
+      "errorMessage": "Invalid credentials"
+    },
+    {
+      "username": "Admin",
+      "password": " admin123 ",
+      "expectedResult": "failure",
+      "errorMessage": "Invalid credentials"
+    }
+  ]
+} 
