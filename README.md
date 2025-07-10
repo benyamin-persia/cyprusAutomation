@@ -414,9 +414,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- **LinkedIn**: [Your LinkedIn Profile]
+- **LinkedIn**: https://www.linkedin.com/in/benyamin-ma/
 - **GitHub**: [@yourusername](https://github.com/yourusername)
-- **Email**: your.email@example.com
+- **Email**: benyamin.mohamadalizadeh7@gmail.com
 
 ---
 
